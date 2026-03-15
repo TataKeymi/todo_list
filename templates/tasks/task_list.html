@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>
+    TODO list
+    <a href="{% url 'tasks:task_create' %}" class="btn btn-primary float-right">
+      Add task
+    </a>
+  </h1>
+
+  {% if task_list %}
+    <ul class="list-unstyled">
+      {% for task in task_list %}
+        <li>
+          <h5>{{ task.content }}</h5>
+            {% if task.is_done %}
+              <h5 style="color:green">Done</h5>
+            {% else %}
+              <h5 style="color:red">Not done</h5>
+            {% endif %}
+          <form action="{% url 'tasks:task_toggle' pk=task.id %}" method="post" class="float-right">
+            {% csrf_token %}
+            {% if task.is_done %}
+              <button type="submit" class="btn btn-secondary">Undo</button>
+            {% else %}
+              <button type="submit" class="btn btn-success">Complete</button>
+            {% endif %}
+          </form>
+          <p>Created : {{ task.created_at }}</p>
+          {% if not task.is_done and task.deadline %}
+            <p style="color:red">Deadline: {{ task.deadline }}</p>
+          {% endif %}
+          <h6>Tags:
+            {% for tag in task.tags.all %}
+              {{ tag.name }}
+            {% endfor %}
+          <a href="{% url 'tasks:task_update' pk=task.id %}">Update</a>
+          <a href="{% url 'tasks:task_delete' pk=task.id %}">Delete</a></h6>
+        </li>
+        <hr>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>There are no cars in taxi</p>
+  {% endif %}
+{% endblock %}
