@@ -16,12 +16,12 @@ class Tag(models.Model):
 class Task(models.Model):
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-    deadline = models.DateTimeField(null=True, blank=True)
+    deadline = models.DateField(null=True, blank=True)
     is_done = models.BooleanField(default=False)
     tags = models.ManyToManyField(Tag)
 
     class Meta:
-        ordering = ("-created_at",)
+        ordering = ("is_done",)
         verbose_name = "task"
         verbose_name_plural = "tasks"
 
